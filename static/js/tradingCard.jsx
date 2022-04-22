@@ -60,14 +60,69 @@ function TradingCard(props) {
   );
 }
 
-function TradingCardContainer() {
-  const floatCard = {
-    name: 'Float',
-    skill: 'baking pretzels',
-    imgUrl: '/static/img/float.jpg'
-  };
+function AddTradingCard(props) {
+  const [name, setName] = React.useState("");
+  const [skill, setSkill] = React.useState("");
+  function addNewCard() {
+    // TO BE IMPLEMENTED
+    alert('trying to add new card');
 
-  const [cards, setCards] = React.useState([floatCard]);
+    //AJAX post request to submit data
+    const newCard = {
+      'name': name,
+      'skill': skill
+    };
+    console.log("newCard", newCard);
+    // React.useEffect(() => {
+    fetch('/add-card', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCard),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("################", result.success);
+      });
+    //}, []);
+  }
+  return (
+    <React.Fragment>
+      <h2>Add New Trading Card</h2>
+      <label htmlFor="nameInput">Name</label>
+      <input
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        id="nameInput"
+        style={{ marginLeft: "5px" }}
+      ></input>
+      <label
+        htmlFor="skillInput"
+        style={{ marginLeft: "10px", marginRight: "5px" }}
+      >
+        Skill
+      </label>
+      <input
+        value={skill}
+        onChange={(event) => setSkill(event.target.value)}
+        id="skillInput"
+      ></input>
+      <button style={{ marginLeft: "10px" }} onClick={addNewCard}>
+        Add
+      </button>
+    </React.Fragment>
+  );
+}
+
+function TradingCardContainer() {
+  // const floatCard = {
+  //   name: 'Float',
+  //   skill: 'baking pretzels',
+  //   imgUrl: '/static/img/float.jpg'
+  // };
+
+  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
     fetch('/cards.json')
@@ -82,7 +137,7 @@ function TradingCardContainer() {
   for (const currentCard of cards) {
     tradingCards.push(
       <TradingCard
-        key={currentCard.name}
+        key={currentCard.cardId}
         name={currentCard.name}
         skill={currentCard.skill}
         imgUrl={currentCard.imgUrl}
@@ -91,8 +146,14 @@ function TradingCardContainer() {
   }
 
   return (
-    <div>{tradingCards}</div>
+    <React.Fragment>
+      <AddTradingCard />
+      <h2>Trading Cards </h2>
+      <div>{tradingCards}</div>
+    </React.Fragment>
   );
 }
+
+
 
 ReactDOM.render(<TradingCardContainer />, document.getElementById('container'));

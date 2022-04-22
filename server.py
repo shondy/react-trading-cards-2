@@ -87,6 +87,7 @@ def add_card():
         "imgUrl": "/static/img/placeholder.png",
         "cardId": len(CARD_DATA) + 1,
     }
+    print("new_card=", new_card)
     CARD_DATA.append(new_card)
     return jsonify({"success": True, "cardAdded": new_card})
 
