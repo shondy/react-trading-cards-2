@@ -73,7 +73,7 @@ function AddTradingCard(props) {
       'skill': skill
     };
     console.log("newCard", newCard);
-    // React.useEffect(() => {
+
     fetch('/add-card', {
       method: 'POST', 
       headers: {
@@ -84,8 +84,9 @@ function AddTradingCard(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log("################", result.success);
+        props.addToCards(result.cardAdded);
       });
-    //}, []);
+
   }
   return (
     <React.Fragment>
@@ -116,12 +117,6 @@ function AddTradingCard(props) {
 }
 
 function TradingCardContainer() {
-  // const floatCard = {
-  //   name: 'Float',
-  //   skill: 'baking pretzels',
-  //   imgUrl: '/static/img/float.jpg'
-  // };
-
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
@@ -131,6 +126,10 @@ function TradingCardContainer() {
         setCards(result.cards);
       });
   }, []);
+
+  function addToCards(card){
+    setCards(prevCards => [...prevCards, card])
+  }
 
   const tradingCards = [];
 
@@ -147,7 +146,7 @@ function TradingCardContainer() {
 
   return (
     <React.Fragment>
-      <AddTradingCard />
+      <AddTradingCard addToCards={addToCards} />
       <h2>Trading Cards </h2>
       <div>{tradingCards}</div>
     </React.Fragment>
